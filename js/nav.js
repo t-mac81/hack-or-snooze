@@ -18,6 +18,7 @@ $body.on('click', '#nav-all', navAllStories);
 function storyFormClick(evt) {
   console.debug('storyFormClick', evt);
   $storyForm.show();
+  $favoriteStoriesList.hide();
 }
 
 $navStoryForm.on('click', storyFormClick);
@@ -42,3 +43,20 @@ function updateNavOnLogin() {
   $navLeft.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+/** show favorites when favorites is clicked on navbar */
+function navFavoritesClick() {
+  console.debug('navFavoritesClick');
+  hidePageComponents();
+  putFavoritesOnPage();
+}
+
+$navFavorites.on('click', navFavoritesClick);
+
+/** show my stories when my stories is clicked on navbar*/
+function navMyStoriesClick() {
+  console.debug('navMyStoriesClick');
+  hidePageComponents();
+}
+
+$navMyStories.on('click', navMyStoriesClick);

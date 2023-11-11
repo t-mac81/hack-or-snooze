@@ -36,19 +36,29 @@ function generateStoryMarkup(story) {
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
-
 function putStoriesOnPage() {
   console.debug('putStoriesOnPage');
-
   $allStoriesList.empty();
-
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-
   $allStoriesList.show();
+  if (currentUser) addFavoriteStar();
+}
+
+/** gets list of favorites, generates HTML, puts on page */
+function putFavoritesOnPage() {
+  console.debug('putFavoritesOnPage');
+  $favoriteStoriesList.empty();
+  // loop through all of our stories and generate HTML for them
+  for (let story of currentUser.favorites) {
+    const $story = generateStoryMarkup(story);
+    $favoriteStoriesList.append($story);
+  }
+  $favoriteStoriesList.show();
+  addFavoriteStar();
 }
 
 /** handle the submit of the new story form */
@@ -65,3 +75,19 @@ async function submitNewStory(evt) {
 }
 
 $storyForm.on('submit', submitNewStory);
+
+/** add favorite star to stories list */
+function addFavoriteStar() {
+  $('li').each(function () {
+    if (currentUser.favorites.some(story => story.storyId === this.id)) {
+      $(this).prepend(
+        `<span class="star"><i class="fa-solid fa-star"></i></span>`
+      );
+    } else $(this).prepend(`<span class="star"><i class="fa-regular fa-star"></i></span>`);
+  });
+}
+
+/** add trash can to my stories list */
+function addDeleteIcon() {
+  // add trash can when my stories list is built.
+}
