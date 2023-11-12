@@ -3,6 +3,7 @@
 body {
   font-family: Arimo, sans-serif;
   margin: 8px 7.5vw;
+  background: linear-gradient(to right, #98bae8, #d7b1d2, #98bae8);
 }
 
 h1 {
@@ -104,9 +105,6 @@ form > hr {
   width: 70px;
 }
 
-.star {
-  cursor: pointer;
-}
 /* responsive queries for tightening things up for mobile. */
 
 @media screen and (max-width: 576px) {

@@ -16,7 +16,6 @@
   margin: 20px 30px;
 }
 
-
 /* Individual stories */
 
 .story-link {
@@ -30,10 +29,23 @@
   text-decoration: none;
 }
 
-.story-author {
-  margin-left: 2em;
-}
-
+.story-author,
 .story-user {
   display: block;
+  margin-left: 2em;
+  margin-top: 0.5em;
+}
+
+.story-author {
+  margin-top: 0.4em;
+  color: #4c9e2c;
+}
+.story-user {
+  margin-top: 0.5em;
+  color: #f7a131;
+}
+
+.star,
+.trash {
+  cursor: pointer;
 }

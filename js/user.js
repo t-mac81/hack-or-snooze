@@ -113,27 +113,15 @@ function updateUIOnUserLogin() {
   $loginForm.hide();
   $signupForm.hide();
   updateNavOnLogin();
-  putStoriesOnPage(); // update with favorite star
+  putStoriesOnPage(storyList.stories, $allStoriesList);
 }
 
-/** handle click to add/remove favorite */
-async function handleFavoriteClick(evt) {
-  const $favoriteStar = $(evt.target);
-  console.log('favorite status:', $favoriteStar.hasClass('fa-solid'));
-  // get id to pass into add/remove favorite function
-  const storyId = $favoriteStar.closest('li').attr('id');
-
-  // determine favorite status by star class, add/remove via API, update star class
-  if ($favoriteStar.hasClass('fa-solid')) {
-    await currentUser.removeFavorite(storyId);
-    $favoriteStar.removeClass('fa-solid');
-    $favoriteStar.addClass('fa-regular');
-  } else if ($favoriteStar.hasClass('fa-regular')) {
-    await currentUser.addFavorite(storyId);
-    $favoriteStar.removeClass('fa-regular');
-    $favoriteStar.addClass('fa-solid');
-  }
+/** show user profile on dom */
+function showUserProfile() {
+  const createdAt = new Date(currentUser.createdAt);
+  const dateStr = `${createdAt.getFullYear()}-${createdAt.getMonth()}-${createdAt.getDate()}`;
+  $('#user-profile-name').text(`Name: ${currentUser.name}`);
+  $('#user-profile-username').text(`Username: ${currentUser.username}`);
+  $('#user-profile-created').text(`Account Created: ${dateStr}`);
+  $userProfileForm.show();
 }
-
-// event listener for add/remove favorite
-$('.stories-list').on('click', handleFavoriteClick);

@@ -23,8 +23,9 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return 'hostname.com';
+    const newURL = new URL(this.url);
+
+    return newURL.host;
   }
 }
 
@@ -80,6 +81,7 @@ class StoryList {
     });
     const newStory = new Story(story);
     this.stories.unshift(newStory);
+    currentUser.ownStories.unshift(newStory);
     return newStory;
   }
 }
@@ -227,5 +229,31 @@ class User {
       { data: { token: this.loginToken } }
     );
     this.updateFavorites(favorites);
+  }
+
+  // method to delete ownStory
+  async deleteOwnStory(deleteId) {
+    console.debug('delete ownStory');
+    // delete from API
+    const {
+      data: { story },
+    } = await axios.delete(`${BASE_URL}/stories/${deleteId}`, {
+      data: { token: this.loginToken },
+    });
+    // remove from this.ownStories
+    const removeIndexOwn = this.ownStories.findIndex(
+      ({ storyId }) => storyId === deleteId
+    );
+    this.ownStories.splice(removeIndexOwn, 1);
+    //remove from this.favorites (if its a favorite)
+    const removeIndexFavorites = this.favorites.findIndex(
+      ({ storyId }) => storyId === deleteId
+    );
+    if (removeIndexFavorites) this.favorites.splice(removeIndexFavorites, 1);
+    // remove from main storyList
+    const removeIndexAll = storyList.stories.findIndex(
+      ({ storyId }) => storyId === deleteId
+    );
+    storyList.stories.splice(removeIndexAll, 1);
   }
 }

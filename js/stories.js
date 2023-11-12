@@ -9,7 +9,7 @@ async function getAndShowStoriesOnStart() {
   storyList = await StoryList.getStories();
   $storiesLoadingMsg.remove();
 
-  putStoriesOnPage();
+  putStoriesOnPage(storyList.stories, $allStoriesList);
 }
 
 /**
@@ -32,33 +32,23 @@ function generateStoryMarkup(story) {
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
       </li>
+      <hr />
     `);
 }
 
-/** Gets list of stories from server, generates their HTML, and puts on page. */
-function putStoriesOnPage() {
+// Reusable function to put stories on page ( allStories, favorites and ownStories)
+function putStoriesOnPage(storyList, $domStoryList) {
   console.debug('putStoriesOnPage');
-  $allStoriesList.empty();
-  // loop through all of our stories and generate HTML for them
-  for (let story of storyList.stories) {
-    const $story = generateStoryMarkup(story);
-    $allStoriesList.append($story);
+  if (storyList.length > 0) {
+    $domStoryList.empty();
+    // loop through storyList and generate HTML for them
+    for (let story of storyList) {
+      const $story = generateStoryMarkup(story);
+      $domStoryList.append($story);
+    }
   }
-  $allStoriesList.show();
+  $domStoryList.show();
   if (currentUser) addFavoriteStar();
-}
-
-/** gets list of favorites, generates HTML, puts on page */
-function putFavoritesOnPage() {
-  console.debug('putFavoritesOnPage');
-  $favoriteStoriesList.empty();
-  // loop through all of our stories and generate HTML for them
-  for (let story of currentUser.favorites) {
-    const $story = generateStoryMarkup(story);
-    $favoriteStoriesList.append($story);
-  }
-  $favoriteStoriesList.show();
-  addFavoriteStar();
 }
 
 /** handle the submit of the new story form */
@@ -70,7 +60,7 @@ async function submitNewStory(evt) {
   const url = $('#story-url').val();
   // await until the response can be received
   await storyList.addStory(currentUser, { title, author, url });
-  putStoriesOnPage();
+  putStoriesOnPage(storyList.stories, $allStoriesList);
   $storyForm.trigger('reset');
 }
 
@@ -81,13 +71,49 @@ function addFavoriteStar() {
   $('li').each(function () {
     if (currentUser.favorites.some(story => story.storyId === this.id)) {
       $(this).prepend(
-        `<span class="star"><i class="fa-solid fa-star"></i></span>`
+        `<span class="star"><i class="fa-star fa-solid"></i></span>`
       );
-    } else $(this).prepend(`<span class="star"><i class="fa-regular fa-star"></i></span>`);
+    } else $(this).prepend(`<span class="star"><i class="fa-star fa-regular"></i></span>`);
   });
 }
 
+/** handle click to add/remove favorite */
+async function handleFavoriteClick(evt) {
+  const $favoriteStar = $(evt.target);
+  // get id to pass into add/remove favorite function
+  const storyId = $favoriteStar.closest('li').attr('id');
+
+  // determine favorite status by star class, add/remove via API, update star class
+  if ($favoriteStar.hasClass('fa-star fa-solid')) {
+    await currentUser.removeFavorite(storyId);
+    $favoriteStar.removeClass('fa-solid');
+    $favoriteStar.addClass('fa-regular');
+  } else if ($favoriteStar.hasClass('fa-star fa-regular')) {
+    await currentUser.addFavorite(storyId);
+    $favoriteStar.removeClass('fa-regular');
+    $favoriteStar.addClass('fa-solid');
+  }
+}
+// event listener for add/remove favorite
+$('.stories-list').on('click', handleFavoriteClick);
+
 /** add trash can to my stories list */
 function addDeleteIcon() {
-  // add trash can when my stories list is built.
+  $myStoriesList.children('li').each(function () {
+    $(this).prepend(
+      '<span class="trash"><i class="fa-solid fa-trash-can"></i></span>'
+    );
+  });
 }
+
+/** handle click to delete ownStory */
+async function handleDeleteClick(evt) {
+  const $trashCan = $(evt.target);
+  if ($trashCan.hasClass('fa-solid fa-trash-can')) {
+    const storyId = $trashCan.closest('li').attr('id');
+    await currentUser.deleteOwnStory(storyId);
+    $trashCan.closest('li').remove();
+  }
+}
+
+$myStoriesList.on('click', handleDeleteClick);

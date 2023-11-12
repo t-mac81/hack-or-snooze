@@ -9,7 +9,7 @@
 function navAllStories(evt) {
   console.debug('navAllStories', evt);
   hidePageComponents();
-  putStoriesOnPage();
+  putStoriesOnPage(storyList.stories, $allStoriesList);
 }
 
 $body.on('click', '#nav-all', navAllStories);
@@ -19,6 +19,8 @@ function storyFormClick(evt) {
   console.debug('storyFormClick', evt);
   $storyForm.show();
   $favoriteStoriesList.hide();
+  $myStoriesList.hide();
+  $userProfileForm.hide();
 }
 
 $navStoryForm.on('click', storyFormClick);
@@ -48,7 +50,7 @@ function updateNavOnLogin() {
 function navFavoritesClick() {
   console.debug('navFavoritesClick');
   hidePageComponents();
-  putFavoritesOnPage();
+  putStoriesOnPage(currentUser.favorites, $favoriteStoriesList);
 }
 
 $navFavorites.on('click', navFavoritesClick);
@@ -57,6 +59,17 @@ $navFavorites.on('click', navFavoritesClick);
 function navMyStoriesClick() {
   console.debug('navMyStoriesClick');
   hidePageComponents();
+  putStoriesOnPage(currentUser.ownStories, $myStoriesList);
+  addDeleteIcon();
 }
 
 $navMyStories.on('click', navMyStoriesClick);
+
+//** show user profile when user is clicked on navbar */
+function navUserProfileClick() {
+  console.debug('navUserProfileClick');
+  hidePageComponents();
+  showUserProfile();
+}
+
+$navUserProfile.on('click', navUserProfileClick);

@@ -94,7 +94,14 @@
       <ol id="all-stories-list" class="stories-list"></ol>
 
       <!-- list of all favorites -->
-      <ol id="favorite-stories-list" class="stories-list"></ol>
+      <ol id="favorite-stories-list" class="stories-list hidden">
+        No favorites added yet!
+      </ol>
+
+      <!-- list of my-stories -->
+      <ol id="my-stories-list" class="stories-list hidden">
+        User has not added any stories yet!
+      </ol>
     </section>
 
     <!-- Login and signup forms -->
@@ -149,6 +156,16 @@
         </div>
         <button type="submit">create account</button>
       </form>
+
+      <!-- Change user info form -->
+
+      <div id="user-profile-form" class="account-form hidden">
+        <h3>User Profile Info</h3>
+        <div><small id="user-profile-name"></small></div>
+        <div><small id="user-profile-username"></small></div>
+        <div><small id="user-profile-created"></small></div>
+        <hr />
+      </div>
     </section>
 
     <!-- Library JS & our JS -->
