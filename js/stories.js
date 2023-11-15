@@ -39,14 +39,14 @@ function generateStoryMarkup(story) {
 // Reusable function to put stories on page ( allStories, favorites and ownStories)
 function putStoriesOnPage(storyList, $domStoryList) {
   console.debug('putStoriesOnPage');
+  $domStoryList.empty();
   if (storyList.length > 0) {
-    $domStoryList.empty();
     // loop through storyList and generate HTML for them
     for (let story of storyList) {
       const $story = generateStoryMarkup(story);
       $domStoryList.append($story);
     }
-  }
+  } else $domStoryList.text('There are no stories here yet!');
   $domStoryList.show();
   if (currentUser) addFavoriteStar();
 }
