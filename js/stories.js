@@ -84,6 +84,8 @@ async function handleFavoriteClick(evt) {
   const storyId = $favoriteStar.closest('li').attr('id');
 
   // determine favorite status by star class, add/remove via API, update star class
+
+  // TODO: add method to USER class - add isFavorite(storyId) instead of using user interface
   if ($favoriteStar.hasClass('fa-star fa-solid')) {
     await currentUser.removeFavorite(storyId);
     $favoriteStar.removeClass('fa-solid');

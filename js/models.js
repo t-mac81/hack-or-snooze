@@ -214,7 +214,7 @@ class User {
       { token: this.loginToken }
     );
     // update local favorites array with new favorite
-    this.favorites.push(new Story(favorites[favorites.length - 1]));
+    this.favorites.push(new Story(favorites[favorites.length - 1])); //search by ID instead of favorites -1
   }
 
   // method to remove favorite story
